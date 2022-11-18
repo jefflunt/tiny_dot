@@ -60,4 +60,12 @@ class TinyDot
       TinyDot.new({})
     end
   end
+
+  def to_json
+    @data.to_json
+  end
+
+  def to_yaml
+    @data.to_yaml
+  end
 end
