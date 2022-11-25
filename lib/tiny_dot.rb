@@ -27,6 +27,11 @@ require 'json'
 # ... which is sort of safe navigation operator-like without the save
 # navigation operator
 class TinyDot
+  # returns a TinyDot instance from the ENV constant
+  def self.from_env
+    TinyDot.new(ENV)
+  end
+
   # returns a TinyDot instance after parsing the YAML in the named filename
   def self.from_yaml_file(filename)
     TinyDot.new(YAML.safe_load_file(filename))
