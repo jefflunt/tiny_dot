@@ -42,18 +42,26 @@ class TinyDot
     TinyDot.new(JSON.parse(IO.read(filename)))
   end
 
+  # returns a TinyDot instance after parsing the JSON in the string
+  def self.from_json_string(s)
+    TinyDot.new(JSON.parse(s))
+  end
+
   # give it a Hash and it'll give you dot notation over it
   def initialize(hash)
     @data = hash
   end
 
-  def method_missing(m)
+  def method_missing(m, *args)
+    val = args.first
     ms = m.to_s
 
     case @data
     when Hash
       if ms.end_with?('!')
         @data[ms[0..-2]]
+      elsif ms.end_with?('=')
+        @data[m[0..-2]] = val
       else
         if @data.has_key?(ms)
           TinyDot.new(@data[ms])
