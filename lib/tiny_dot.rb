@@ -70,6 +70,13 @@ class TinyDot
     @data.to_json
   end
 
+  # NOTE: this returns the raw hash inside of the TinyDot instance, which means
+  # if you modify anything here you're modifying the internal data in this
+  # TinyDot instance
+  def to_hash
+    @data
+  end
+
   def to_yaml
     @data.to_yaml
   end
