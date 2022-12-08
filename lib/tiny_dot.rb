@@ -33,8 +33,8 @@ class TinyDot
   end
 
   # returns a TinyDot instance after parsing the YAML in the named filename
-  def self.from_yaml_file(filename)
-    TinyDot.new(YAML.safe_load_file(filename))
+  def self.from_yaml_file(filename, permitted_classes: [])
+    TinyDot.new(YAML.safe_load_file(filename, permitted_classes: permitted_classes))
   end
 
   # returns a TinyDot instance after parsing the JSON in the named filename
