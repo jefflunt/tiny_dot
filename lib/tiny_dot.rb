@@ -74,6 +74,10 @@ class TinyDot
     end
   end
 
+  def ==(other)
+    @data == other.to_hash
+  end
+
   def to_json
     @data.to_json
   end
