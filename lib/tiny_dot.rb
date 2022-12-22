@@ -48,7 +48,7 @@ class TinyDot
   end
 
   # give it a Hash and it'll give you dot notation over it
-  def initialize(hash)
+  def initialize(hash={})
     @data = hash
   end
 
