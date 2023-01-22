@@ -24,7 +24,7 @@ require 'json'
 #   > t.foo.bar.baz.whatever.as.deep.as.you.want
 #  => nil
 #
-# ... which is sort of safe navigation operator-like without the save
+# ... which is sort of safe navigation operator-like without the safe
 # navigation operator
 class TinyDot
   # returns a TinyDot instance from the ENV constant
