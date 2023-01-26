@@ -1,6 +1,7 @@
 see `lib/tiny_dot.rb`
 
-DEPRECATED:
+DEPRECATED
+
 consider these alternatives:
 
 * [json_to_struct](https://github.com/jefflunt/json_to_struct)
