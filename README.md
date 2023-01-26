@@ -1,6 +1,6 @@
-see `lib/tiny_dot.rb`
-
 DEPRECATED
+
+see `lib/tiny_dot.rb`
 
 consider these alternatives:
 
