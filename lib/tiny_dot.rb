@@ -1,95 +1,68 @@
-require 'yaml'
-require 'json'
+require 'psych'
+require 'oj'
 
-# this class gives you read-only access to Hases, JSON, and YAML files using
-# dot notation. it makes clever use of #method_missing to allow you to do the
-# following:
+# The TinyDot module provides methods for converting data from different
+# formats (environment variables, YAML, JSON and Hashes) into a nested Struct.
+# This allows for easy access to the data using dot notation.
 #
-#   > t = TinyDot.new({ 'foo' => { 'bar' => 'baz' }})
-#   > t.foo                                               # returns another instance of TinyDot
-#  => #<TinyDot:0x0201243 @data={ 'bar' => 'baz' }>
-#   > t.foo!                                              # ! returns the value under the chain of keys
-#  => { 'bar' => 'baz' }
+# The `from_env` method converts the current environment variables into a
+# Struct.
 #
-# ... in other words, it gives you a convenient dot notation syntax for
-# accessing nested hashes. you can chain calls to this and you'll get a new
-# object that's essentially a #dig into the top-level hash.
+# The `from_yaml` method takes a string containing YAML data and converts it
+# into a Struct.
 #
-# if you add '!' to the last method in a chain it will return the value under
-# that key.
+# The `from_json` method takes a string containing JSON data and converts it
+# into a Struct.
 #
-# finally, you can use dot syntax as deep as you want, and if there's no key at
-# that level you'll just get `nil' back:
+# The `from_hash` method takes a Hash and converts it into a Struct. It really
+# just calls the `_hash_to_struct` method.
 #
-#   > t.foo.bar.baz.whatever.as.deep.as.you.want
-#  => nil
+# The `_hash_to_struct` is a private method that is used by the other methods
+# to convert the data from a hash into a Struct. It handles nested data by
+# recursively calling itself when it encounters a Hash or an array within the
+# data.
 #
-# ... which is sort of safe navigation operator-like without the safe
-# navigation operator
-class TinyDot
-  # returns a TinyDot instance from the ENV constant
-  def self.from_env
-    TinyDot.new(ENV)
-  end
-
-  # returns a TinyDot instance after parsing the YAML in the named filename
-  def self.from_yaml_file(filename, permitted_classes: [])
-    TinyDot.new(YAML.safe_load_file(filename, permitted_classes: permitted_classes))
-  end
-
-  # returns a TinyDot instance after parsing the JSON in the named filename
-  def self.from_json_file(filename)
-    TinyDot.new(JSON.parse(IO.read(filename)))
-  end
-
-  # returns a TinyDot instance after parsing the JSON in the string
-  def self.from_json_string(s)
-    TinyDot.new(JSON.parse(s))
-  end
-
-  # give it a Hash and it'll give you dot notation over it
-  def initialize(hash={})
-    @data = hash
-  end
-
-  def method_missing(m, *args)
-    val = args.first
-    ms = m.to_s
-
-    case @data
-    when Hash
-      if ms.end_with?('!')
-        @data[ms[0..-2]]
-      elsif ms.end_with?('=')
-        @data[m[0..-2]] = val
-      else
-        if @data.has_key?(ms)
-          TinyDot.new(@data[ms])
-        else
-          TinyDot.new({})
-        end
-      end
-    else
-      TinyDot.new({})
+# The `_to_attr_friendly_symbols` is a private method that is used to convert
+# keys in the hash to symbols that can be used as attributes in a Struct. It
+# replaces spaces and dashes with underscores and converts the keys to symbols.
+#
+# Please note that the JSON and YAML are required to be passed as String.
+module TinyDot
+  class << self
+    def from_env
+      _hash_to_struct(ENV.to_h)
     end
-  end
 
-  def ==(other)
-    @data == other.to_hash
-  end
+    def from_yaml(yaml_string)
+      yaml = Psych.load(yaml_string)
+      _hash_to_struct(yaml)
+    end
 
-  def to_json
-    @data.to_json
-  end
+    def self.from_json(json_string)
+      json = Oj.load(json_string)
+      _hash_to_struct(json)
+    end
 
-  # NOTE: this returns the raw hash inside of the TinyDot instance, which means
-  # if you modify anything here you're modifying the internal data in this
-  # TinyDot instance
-  def to_hash
-    @data
-  end
+    def self.from_hash(hash)
+      _hash_to_struct(json)
+    end
 
-  def to_yaml
-    @data.to_yaml
+    def _hash_to_struct(hash)
+      case hash
+      when Hash
+        struct = ::Struct.new(*_to_attr_friendly_symbols(hash.keys))
+        struct.new(*hash.values.map { |v| _hash_to_struct(v) })
+      when Array
+        hash.map { |v| _hash_to_struct(v) }
+      else
+        hash
+      end
+    end
+
+    def _to_attr_friendly_symbols(keys)
+      keys
+        .map{|k| k.gsub(/[-\s]/, '_') }
+        .map(&:to_sym)
+    end
   end
 end
