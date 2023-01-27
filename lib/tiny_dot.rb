@@ -27,6 +27,17 @@ require 'oj'
 # replaces spaces and dashes with underscores and converts the keys to symbols.
 #
 # Please note that the JSON and YAML are required to be passed as String.
+#
+# Because this module constructs a series of nested Structs from Hash-like
+# inputs, it means you can read/write data pretty easily:
+#
+#   > s = TinyDot.from_json(<some deeply nested JSON>)
+#  => <struct ... >
+#   > s.foo.bar.baz
+#  => 5
+#   > s.foo.bar.baz = 99
+#   < s.foo.bar.baz
+#  => 99
 module TinyDot
   class << self
     def from_env
