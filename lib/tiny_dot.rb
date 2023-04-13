@@ -49,9 +49,14 @@ module TinyDot
       _hash_to_struct(yaml)
     end
 
-    def self.from_json(json_string)
+    def from_json(json_string)
       json = Oj.load(json_string)
       _hash_to_struct(json)
+    end
+
+    def from_csv(csv_string)
+      data = CSV.parse(csv_string, headers: true)
+      data.map { |row| _hash_to_struct(row.to_hash) }
     end
 
     def self.from_hash(hash)
