@@ -14,6 +14,9 @@ require 'oj'
 # The `from_json` method takes a string containing JSON data and converts it
 # into a Struct.
 #
+# The `from_csv` method takes a string containing raw CSV data and converts it
+# to an Array of Struct.
+#
 # The `from_hash` method takes a Hash and converts it into a Struct. It really
 # just calls the `_hash_to_struct` method.
 #
