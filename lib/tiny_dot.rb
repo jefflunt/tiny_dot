@@ -63,7 +63,7 @@ module TinyDot
     end
 
     def from_hash(hash)
-      _hash_to_struct(json)
+      _hash_to_struct(hash)
     end
 
     def _hash_to_struct(hash)
