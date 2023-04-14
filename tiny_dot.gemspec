@@ -1,8 +1,8 @@
 Gem::Specification.new do |s|
   s.name        = "tiny_dot"
-  s.version     = "3.1.2"
-  s.description = "a tiny read/write dot notation wrapper for Hash, JSON, YAML, and ENV"
-  s.summary     = "want to have easy dot notation access to data that comes from Hashes, JSON, and YAML - and absolutely nothing else? then this is the library for you."
+  s.version     = "3.1.3"
+  s.description = "a tiny read/write dot notation wrapper for Hash, JSON, YAML, CSV, and ENV"
+  s.summary     = "this library will take in one of the supported formats and will recursively build a nested set of Structs out of it"
   s.authors     = ["Jeff Lunt"]
   s.email       = "jefflunt@gmail.com"
   s.files       = ["lib/tiny_dot.rb"]

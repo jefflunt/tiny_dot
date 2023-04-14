@@ -62,7 +62,7 @@ module TinyDot
       data.map { |row| _hash_to_struct(row.to_hash) }
     end
 
-    def self.from_hash(hash)
+    def from_hash(hash)
       _hash_to_struct(json)
     end
 
