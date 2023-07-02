@@ -66,15 +66,17 @@ module TinyDot
       _hash_to_struct(hash)
     end
 
-    def _hash_to_struct(hash)
-      case hash
+    def _hash_to_struct(obj)
+      case obj
       when Hash
-        struct = ::Struct.new(*_to_attr_friendly_symbols(hash.keys))
-        struct.new(*hash.values.map { |v| _hash_to_struct(v) })
+        return obj if obj.keys.empty?
+
+        struct = ::Struct.new(*_to_attr_friendly_symbols(obj.keys))
+        struct.new(*obj.values.map { |v| _hash_to_struct(v) })
       when Array
-        hash.map { |v| _hash_to_struct(v) }
+        obj.map { |v| _hash_to_struct(v) }
       else
-        hash
+        obj
       end
     end
 
