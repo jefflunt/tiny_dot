@@ -80,7 +80,7 @@ module TinyDot
 
     def _to_attr_friendly_symbols(keys)
       keys
-        .map{|k| k.gsub(/[-\s]/, '_') }
+        .map{|k| k.to_s.gsub(/[-\s]/, '_') }
         .map(&:to_sym)
     end
   end
